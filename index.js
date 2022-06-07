@@ -1,6 +1,5 @@
 require('dotenv').config();
 const { Telegraf } = require('telegraf');
-const ytdl = require('ytdl-core');
 const {
     StartCommand,
     MessageListener,
@@ -20,7 +19,7 @@ bot.start((ctx) => StartCommand(ctx));
 
 bot.hears('/count', (ctx) => CountCommand(ctx));
 
-bot.on('message', (ctx) => MessageListener(ctx, ytdl));
+bot.on('message', (ctx) => MessageListener(ctx));
 
 bot.on('callback_query', (ctx) => QueryListener(ctx));
 

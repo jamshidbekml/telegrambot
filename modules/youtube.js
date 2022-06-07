@@ -1,4 +1,6 @@
-const SendVideo = async (contex, ytdl) => {
+const ytdl = require('ytdl-core');
+
+const SendVideo = async (contex) => {
     contex.reply('⏳');
     const info = await ytdl.getInfo(contex.message.text);
     if (info.formats[0].contentLength / 1024 / 1024 < 30) {
