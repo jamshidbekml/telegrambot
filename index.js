@@ -1,74 +1,27 @@
 require('dotenv').config();
 const { Telegraf } = require('telegraf');
 const ytdl = require('ytdl-core');
-const fs = require('fs');
+const {
+    StartCommand,
+    MessageListener,
+    CountCommand,
+    QueryListener,
+} = require('./lib/commands');
+const { sequelize } = require('./model/model');
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-bot.start((ctx) => ctx.reply('Welcome'));
-bot.help((ctx) => ctx.reply('Send me a sticker'));
-bot.on('message', async (ctx) => {
-    try {
-        if (ytdl.validateURL(ctx.message.text)) {
-            ctx.reply('⏳');
-            const info = await ytdl.getInfo(ctx.message.text);
-            if (info.formats[0].contentLength / 1024 / 1024 < 30) {
-                const stream = ytdl(ctx.message.text);
-                ctx.replyWithVideo(
-                    {
-                        source: stream,
-                    },
-                    {
-                        reply_markup: {
-                            inline_keyboard: [
-                                [
-                                    {
-                                        text: 'Audio',
-                                        callback_data: ctx.message.text,
-                                    },
-                                ],
-                            ],
-                        },
-                        parse_mode: 'HTML',
-                        caption: `
-                        @forLearningro_bot\n\n<i>${info.videoDetails.title}</i>
-                        `,
-                    }
-                );
-            } else {
-                ctx.reply(
-                    'Ushbu videoni hajmi kutilgandan kattaroq iltimos faqat kichik hajmdagi videolarni yuboring !!!',
-                    {
-                        reply_to_message_id: ctx.message.message_id,
-                    }
-                );
-            }
-        } else {
-            ctx.reply('Ushbu link xato kiritilgan', {
-                reply_to_message_id: ctx.message.message_id,
-            });
-        }
-    } catch (err) {
-        console.log(err);
-        ctx.reply('Botda xatolik roy berdi', {
-            reply_to_message_id: ctx.message.message_id,
-        });
-    }
-});
+sequelize
+    .sync({ force: false })
+    .then(() => console.log('connected'))
+    .catch((err) => console.log(err));
 
-bot.on('callback_query', (ctx) => {
-    ctx.replyWithAudio(
-        {
-            source: ytdl(ctx.update.callback_query.data, {
-                filter: 'audioonly',
-            }),
-        },
-        {
-            caption: '@forLerarningro_bot',
-        }
-    );
-});
+bot.start((ctx) => StartCommand(ctx));
 
-bot.hears('hi', (ctx) => ctx.reply('Hey there'));
+bot.hears('/count', (ctx) => CountCommand(ctx));
+
+bot.on('message', (ctx) => MessageListener(ctx, ytdl));
+
+bot.on('callback_query', (ctx) => QueryListener(ctx));
 
 bot.launch();
