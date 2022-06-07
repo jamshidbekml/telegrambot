@@ -39,7 +39,7 @@ const SendVideo = async (contex) => {
 const SendAudio = (context, ytdl) => {
     context.replyWithAudio(
         {
-            source: ytdl(ctx.update.callback_query.data, {
+            source: ytdl(context.update.callback_query.data, {
                 filter: 'audioonly',
             }),
         },
