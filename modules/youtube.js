@@ -36,7 +36,7 @@ const SendVideo = async (contex) => {
     }
 };
 
-const SendAudio = (context, ytdl) => {
+const SendAudio = (context) => {
     context.replyWithAudio(
         {
             source: ytdl(context.update.callback_query.data, {
