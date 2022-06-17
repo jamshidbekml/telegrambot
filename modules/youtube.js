@@ -1,10 +1,11 @@
 const ytdl = require('ytdl-core');
 
-const SendVideo = async (contex) => {
+const YouTubeVideo = async (contex) => {
     contex.reply('⏳');
     const info = await ytdl.getInfo(contex.message.text);
-    if (info.formats[0].contentLength / 1024 / 1024 < 30) {
+    if (info.formats[0].contentLength / 1024 / 1024 < 50) {
         const stream = ytdl(contex.message.text);
+        contex.replyWithChatAction('upload_video');
         contex.replyWithVideo(
             {
                 source: stream,
@@ -22,7 +23,7 @@ const SendVideo = async (contex) => {
                 },
                 parse_mode: 'HTML',
                 caption: `
-                            @forLearningro_bot\n\n<i>${info.videoDetails.title}</i>
+                            @smvideosdl_bot\n\n<i>${info.videoDetails.title}</i>
                             `,
             }
         );
@@ -38,7 +39,8 @@ const SendVideo = async (contex) => {
 
 // Send audio
 
-const SendAudio = (context) => {
+const YouTubeAudio = (context) => {
+    context.replyWithChatAction('upload_audio');
     context.replyWithAudio(
         {
             source: ytdl(context.update.callback_query.data, {
@@ -51,4 +53,4 @@ const SendAudio = (context) => {
     );
 };
 
-module.exports = { SendVideo, SendAudio };
+module.exports = { YouTubeVideo, YouTubeAudio };
