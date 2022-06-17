@@ -56,6 +56,7 @@ const Instagram = async (ctx, story) => {
                 },
             }
         );
+        console.log(JSON.parse(data));
         if (
             JSON.parse(data).videos_links.length == 0 &&
             JSON.parse(data).images_links.length == 0
@@ -72,6 +73,7 @@ const Instagram = async (ctx, story) => {
                     },
                 }
             );
+            console.log(JSON.parse(data));
             if (JSON.parse(data).images_links && story) {
                 const ImagesLinks = JSON.parse(data).images_links;
                 ImagesLinks.forEach((e) => {
