@@ -29,7 +29,7 @@ const YouTubeVideo = async (contex) => {
         );
     } else {
         contex.reply(
-            'Ushbu videoni hajmi kutilgandan kattaroq iltimos faqat kichik hajmdagi videolarni yuboring !!!',
+            'The size of this video is larger than expected, please send only small size videos !!!',
             {
                 reply_to_message_id: contex.message.message_id,
             }
