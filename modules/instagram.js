@@ -15,6 +15,7 @@ const InstagramVideo = async (ctx) => {
                 },
             }
         );
+        console.log(data);
         const videoLink = data.url[0].url;
         ctx.replyWithChatAction('upload_video');
         ctx.replyWithVideo(
