@@ -39,14 +39,20 @@ const YouTubeVideo = async (contex) => {
 
 // Send audio
 
-const YouTubeAudio = (context) => {
+const YouTubeAudio = async (context) => {
+    const info = await ytdl.getInfo(context.update.callback_query.data);
+    const title = info.videoDetails.title;
+    var name = 'music.mp3';
+    if (title.includes('-')) {
+        name = title.split('-')[1];
+    }
     context.replyWithChatAction('upload_audio');
     context.replyWithAudio(
         {
             source: ytdl(context.update.callback_query.data, {
                 filter: 'audioonly',
             }),
-            filename: 'music.mp3',
+            filename: name,
         },
         {
             caption: '@forLerarningro_bot',
