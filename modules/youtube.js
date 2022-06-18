@@ -46,6 +46,7 @@ const YouTubeAudio = (context) => {
             source: ytdl(context.update.callback_query.data, {
                 filter: 'audioonly',
             }),
+            filename: 'music.mp3',
         },
         {
             caption: '@forLerarningro_bot',
