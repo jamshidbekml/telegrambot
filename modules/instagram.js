@@ -1,4 +1,3 @@
-const { UrlIsValid } = require('../lib/urlIsValid');
 const axios = require('axios').default;
 
 const Instagram = async (ctx, story) => {
@@ -47,21 +46,15 @@ const Instagram = async (ctx, story) => {
             if (JSON.parse(data).videos_links) {
                 const VideoLinks = JSON.parse(data).videos_links;
                 VideoLinks.forEach(async (e) => {
-                    if (await UrlIsValid(e.url)) {
-                        ctx.replyWithChatAction('upload_video');
-                        ctx.replyWithVideo(
-                            {
-                                url: e.url,
-                            },
-                            {
-                                caption: `@smvideosdl_bot`,
-                            }
-                        );
-                    } else {
-                        ctx.reply('URL signature expired !!!', {
-                            reply_to_message_id: ctx.message.message_id,
-                        });
-                    }
+                    ctx.replyWithChatAction('upload_video');
+                    ctx.replyWithVideo(
+                        {
+                            url: e.url,
+                        },
+                        {
+                            caption: `@smvideosdl_bot`,
+                        }
+                    );
                 });
             }
             return;
@@ -83,21 +76,15 @@ const Instagram = async (ctx, story) => {
         if (JSON.parse(data).videos_links) {
             const VideoLinks = JSON.parse(data).videos_links;
             VideoLinks.forEach(async (e) => {
-                if (await UrlIsValid(e.url)) {
-                    ctx.replyWithChatAction('upload_video');
-                    ctx.replyWithVideo(
-                        {
-                            url: e.url,
-                        },
-                        {
-                            caption: `@smvideosdl_bot`,
-                        }
-                    );
-                } else {
-                    ctx.reply('URL signature expired !!!', {
-                        reply_to_message_id: ctx.message.message_id,
-                    });
-                }
+                ctx.replyWithChatAction('upload_video');
+                ctx.replyWithVideo(
+                    {
+                        url: e.url,
+                    },
+                    {
+                        caption: `@smvideosdl_bot`,
+                    }
+                );
             });
         }
     } catch (err) {
