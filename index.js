@@ -8,7 +8,7 @@ const {
 } = require('./lib/commands');
 const { sequelize, BotSubscribers } = require('./model/model');
 
-const bot = new Telegraf(process.env.TOKEN);
+const bot = new Telegraf(process.env.BOT_TOKEN);
 
 sequelize
     .sync({ force: false })
@@ -19,12 +19,14 @@ bot.start((ctx) => StartCommand(ctx));
 
 bot.hears('/count', (ctx) => CountCommand(ctx));
 
-bot.on('message', (ctx) => {
+bot.on('message', async (ctx) => {
     if (
         ctx.message.chat.id == process.env.ADMIN &&
         ctx.message.text.includes('/elon')
     ) {
         console.log(ctx.message);
+        const users = await BotSubscribers.findAll();
+        ctx.reply(users);
     } else {
         MessageListener(ctx);
     }
