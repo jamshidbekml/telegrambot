@@ -29,7 +29,7 @@ const YouTubeVideo = async (contex) => {
                 }
             )
             .then((res) => {
-                ctx.telegram.forwardMessage(
+                contex.telegram.forwardMessage(
                     '@downloadedVideos',
                     res.chat.id,
                     res.message_id
@@ -50,10 +50,6 @@ const YouTubeVideo = async (contex) => {
 const YouTubeAudio = async (context) => {
     const info = await ytdl.getInfo(context.update.callback_query.data);
     const title = info.videoDetails.title;
-    var name = 'music.mp3';
-    if (title.includes('-')) {
-        name = title.split('-')[1];
-    }
     context.replyWithChatAction('upload_audio');
     context
         .replyWithAudio(
@@ -61,14 +57,14 @@ const YouTubeAudio = async (context) => {
                 source: ytdl(context.update.callback_query.data, {
                     filter: 'audioonly',
                 }),
-                filename: name,
+                filename: title,
             },
             {
                 caption: '@forLerarningro_bot',
             }
         )
         .then((res) => {
-            ctx.telegram.forwardMessage(
+            context.telegram.forwardMessage(
                 '@downloadedVideos',
                 res.chat.id,
                 res.message_id
