@@ -20,15 +20,29 @@ bot.start((ctx) => StartCommand(ctx));
 bot.hears('/count', (ctx) => CountCommand(ctx));
 
 bot.on('message', async (ctx) => {
-    if (
-        ctx.message.chat.id == process.env.ADMIN &&
-        ctx.message.text.includes('/elon')
-    ) {
-        console.log(ctx.message);
-        const users = await BotSubscribers.findAll();
-        ctx.reply(users);
-    } else {
-        MessageListener(ctx);
+    try {
+        if (
+            ctx.message.chat.id == process.env.ADMIN &&
+            ctx.message.caption.includes('/elon')
+        ) {
+            const users = await BotSubscribers.findAll();
+            users.forEach((e) => {
+                ctx.telegram.sendPhoto(
+                    e.dataValues.chatId,
+                    ctx.message.photo[0].file_id,
+                    {
+                        caption: ctx.message.caption
+                            .split('/elon')
+                            .join('')
+                            .trim(),
+                    }
+                );
+            });
+        } else {
+            MessageListener(ctx);
+        }
+    } catch (err) {
+        console.log(err);
     }
 });
 
