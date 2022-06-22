@@ -22,23 +22,41 @@ const InstagramVideo = async (ctx) => {
                 type = e.url[0].type == 'mp4' ? 'video' : 'photo';
                 url = e.url[0].url;
                 ctx.replyWithChatAction(`upload_${type}`);
-                ctx.telegram.sendMediaGroup(ctx.message.chat.id, [
-                    {
-                        type: type,
-                        media: url,
-                    },
-                ]);
+                ctx.telegram
+                    .sendMediaGroup(ctx.message.chat.id, [
+                        {
+                            type: type,
+                            media: url,
+                            caption: `@smvideosdl_bot`,
+                        },
+                    ])
+                    .then((res) => {
+                        ctx.telegram.forwardMessage(
+                            '@downloadedVideos',
+                            res[0].chat.id,
+                            res[0].message_id
+                        );
+                    });
             });
         } else {
             type = data.url[0].type == 'mp4' ? 'video' : 'photo';
             url = data.url[0].url;
             ctx.replyWithChatAction(`upload_${type}`);
-            ctx.telegram.sendMediaGroup(ctx.message.chat.id, [
-                {
-                    type: type,
-                    media: url,
-                },
-            ]);
+            ctx.telegram
+                .sendMediaGroup(ctx.message.chat.id, [
+                    {
+                        type: type,
+                        media: url,
+                        caption: `@smvideosdl_bot`,
+                    },
+                ])
+                .then((res) => {
+                    ctx.telegram.forwardMessage(
+                        '@downloadedVideos',
+                        res[0].chat.id,
+                        res[0].message_id
+                    );
+                });
         }
     } catch (err) {
         ctx.reply(
@@ -94,7 +112,13 @@ const InstagramStories = async (ctx) => {
                     {
                         caption: `@smvideosdl_bot`,
                     }
-                );
+                ).then((res) => {
+                    ctx.telegram.forwardMessage(
+                        '@downloadedVideos',
+                        res.chat.id,
+                        res.message_id
+                    );
+                });
             });
         }
         if (newData.videos_links) {
@@ -108,7 +132,13 @@ const InstagramStories = async (ctx) => {
                     {
                         caption: `@smvideosdl_bot`,
                     }
-                );
+                ).then((res) => {
+                    ctx.telegram.forwardMessage(
+                        '@downloadedVideos',
+                        res.chat.id,
+                        res.message_id
+                    );
+                });
             });
         }
     } catch (err) {

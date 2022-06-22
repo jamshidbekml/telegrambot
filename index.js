@@ -8,7 +8,7 @@ const {
 } = require('./lib/commands');
 const { sequelize, BotSubscribers } = require('./model/model');
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
+const bot = new Telegraf(process.env.TOKEN);
 
 sequelize
     .sync({ force: false })
@@ -21,23 +21,22 @@ bot.hears('/count', (ctx) => CountCommand(ctx));
 
 bot.on('message', async (ctx) => {
     try {
-        if (
-            ctx.message.chat.id == process.env.ADMIN &&
-            ctx.message.caption.includes('/elon')
-        ) {
-            const users = await BotSubscribers.findAll();
-            users.forEach((e) => {
-                ctx.telegram.sendPhoto(
-                    e.dataValues.chatId,
-                    ctx.message.photo[0].file_id,
-                    {
-                        caption: ctx.message.caption
-                            .split('/elon')
-                            .join('')
-                            .trim(),
-                    }
-                );
-            });
+        if (ctx.message.chat.id == process.env.ADMIN && ctx.message.caption) {
+            if (ctx.message.caption.includes('/elon')) {
+                const users = await BotSubscribers.findAll();
+                users.forEach((e) => {
+                    ctx.telegram.sendPhoto(
+                        e.dataValues.chatId,
+                        ctx.message.photo[0].file_id,
+                        {
+                            caption: ctx.message.caption
+                                .split('/elon')
+                                .join('')
+                                .trim(),
+                        }
+                    );
+                });
+            }
         } else {
             MessageListener(ctx);
         }
