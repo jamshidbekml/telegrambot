@@ -15,16 +15,39 @@ const InstagramVideo = async (ctx, story) => {
                 },
             }
         );
-        const link = data[0].url[0].url;
-        ctx.replyWithChatAction('upload_video');
-        ctx.replyWithVideo(
-            {
-                url: link,
-            },
-            {
-                caption: `@smvideosdl_bot`,
-            }
-        );
+        var type;
+        var url;
+        if (data[0]) {
+            data.forEach((e) => {
+                type = e.url[0].type == 'mp4' ? 'video' : 'photo';
+                url = e.url[0].url;
+                ctx.replyWithChatAction(`upload_${type}`);
+                ctx.telegram.sendMediaGroup(ctx.message.chat.id, [
+                    {
+                        type: type,
+                        media: url,
+                    },
+                ]);
+            });
+        } else {
+            type = data.url[0].type == 'mp4' ? 'video' : 'photo';
+            url = data.url[0].url;
+            ctx.replyWithChatAction(`upload_${type}`);
+            ctx.telegram.sendMediaGroup(ctx.message.chat.id, [
+                {
+                    type: type,
+                    media: url,
+                },
+            ]);
+        }
+        // ctx.replyWithVideo(
+        //     {
+        //         url: link,
+        //     },
+        //     {
+        //         caption: `@smvideosdl_bot`,
+        //     }
+        // );
         // if (
         //     JSON.parse(data).videos_links.length == 0 &&
         //     JSON.parse(data).images_links.length == 0
