@@ -2,9 +2,13 @@ const ytdl = require('ytdl-core');
 
 const YouTubeVideo = async (contex) => {
     contex.reply('⏳');
-    const info = await ytdl.getInfo(contex.message.text);
+    var link = contex.message.text;
+    if (link.includes('watch')) {
+        link = link.slice(0, 43);
+    }
+    const info = await ytdl.getInfo(link);
     if (info.formats[0].contentLength / 1024 / 1024 < 50) {
-        const stream = ytdl(contex.message.text);
+        const stream = ytdl(link);
         contex.replyWithChatAction('upload_video');
         contex
             .replyWithVideo(
@@ -17,7 +21,7 @@ const YouTubeVideo = async (contex) => {
                             [
                                 {
                                     text: 'Audio',
-                                    callback_data: contex.message.text,
+                                    callback_data: link,
                                 },
                             ],
                         ],
