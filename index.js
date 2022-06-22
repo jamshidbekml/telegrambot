@@ -15,24 +15,20 @@ sequelize
     .then(() => console.log('connected'))
     .catch((err) => console.log(err));
 
-// const UserMesages = async (msg) => {
-//     try {
-//         const users = await BotSubscribers.findAll();
-//         users.forEach((e) => {
-//             ctx.telegram.sendMessage(1771234776, msg);
-//         });
-//     } catch (err) {
-//         console.log(err.message);
-//     }
-// };
-
-// UserMesages('Botga instagramdan videolar tortish funksiyasi qo`shildi');
-
 bot.start((ctx) => StartCommand(ctx));
 
 bot.hears('/count', (ctx) => CountCommand(ctx));
 
-bot.on('message', (ctx) => MessageListener(ctx));
+bot.on('message', (ctx) => {
+    if (
+        ctx.message.chat.id == process.env.ADMIN &&
+        ctx.message.text.includes('/elon')
+    ) {
+        console.log(ctx.message);
+    } else {
+        MessageListener(ctx);
+    }
+});
 
 bot.on('callback_query', (ctx) => QueryListener(ctx));
 
