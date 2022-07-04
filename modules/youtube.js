@@ -64,7 +64,7 @@ const YouTubeAudio = async (context) => {
                 filename: title,
             },
             {
-                caption: '@forLerarningro_bot',
+                caption: '@smvideosdl_bot',
             }
         )
         .then((res) => {
