@@ -115,13 +115,17 @@ const InstagramVideo = async (ctx) => {
         console.log(err.message);
     }
 };
+// https://instadownloader.co/instagram_post_data.php?path=%2Finstagram-story-download.php&url=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fahadbekmunirov%2F2883040101828138435%2F
 
 const InstagramStories = async (ctx) => {
     try {
         ctx.reply('⏳');
+        const newLinkArr = ctx.message.text.split('/');
         const { data } = await axios.get(
-            'https://instadownloader.co/instagram_post_data.php?url=' +
-                ctx.message.text,
+            'https://instadownloader.co/instagram_post_data.php?path=%2Finstagram-story-download.php&url=https%3A%2F%2Fwww.instagram.com%2Fstories%2F' +
+                newLinkArr[4] +
+                '%2f' +
+                newLinkArr[5],
             {
                 headers: {
                     'user-agent':
@@ -130,24 +134,7 @@ const InstagramStories = async (ctx) => {
             }
         );
         var newData = JSON.parse(data);
-        if (
-            newData.videos_links.length == 0 &&
-            newData.images_links.length == 0
-        ) {
-            const newLinkArr = ctx.message.text.split('/');
-            const newLink = `https://www.instagram.com/${newLinkArr[3]}/${newLinkArr[4]}`;
-            const { data } = await axios.get(
-                'https://instadownloader.co/insta_downloader.php?url=' +
-                    newLink,
-                {
-                    headers: {
-                        'User-Agent':
-                            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36',
-                    },
-                }
-            );
-            newData = JSON.parse(data);
-        }
+
         if (newData.images_links) {
             const ImagesLinks = newData.images_links;
             ImagesLinks.forEach((e) => {
@@ -190,7 +177,7 @@ const InstagramStories = async (ctx) => {
             });
         }
     } catch (err) {
-        console.log(err.message);
+        console.log(err);
         ctx.reply(
             'This link is incorrectly entered or the user account is private',
             {
@@ -205,8 +192,9 @@ const ProfilePhoto = async (ctx) => {
         ctx.reply('⏳');
         var url = `https://www.instagram.com/${ctx.message.text.slice(1)}/`;
         const { data } = await axios.get(
-            'https://instadownloader.co/instagram_profile_pic_data.php?url=' +
-                url,
+            `https://instadownloader.co/instagram_profile_pic_data.php?path=%2Fprofile.php&url=https%3A%2F%2Fwww.instagram.com%2F${ctx.message.text.slice(
+                1
+            )}%2F`,
             {
                 headers: {
                     'user-agent':
@@ -215,6 +203,7 @@ const ProfilePhoto = async (ctx) => {
             }
         );
         var newData = JSON.parse(data);
+        console.log(newData);
         if (newData.images_links) {
             const ImagesLinks = newData.images_links;
             ImagesLinks.forEach((e) => {
