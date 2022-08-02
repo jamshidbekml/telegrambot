@@ -132,10 +132,12 @@ const InstagramStories = async (ctx) => {
                 'user-agent':
                     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36',
                 'x-token': null,
-                'x-xsrf-token': 'eyJpdiI6IkhjWnc0ZVwvR3J1UVBjREg1dEFQY2ZBPT0iLCJ2YWx1ZSI6InNrdlVvYkhEOWtZYWptaUIxZ0VrejlJNXY2OEJxWjJ3TWFnTTRMaGFWR1I4c2I2bVZEdTdGYTlhd0I1YUh3SVZldlhOU2FvTnZvVWFtOWRNaWtBalNYZnhcL01XZUxyWklvdzJhRzQ0ZHRmM3g5SmphY3hXT2dUa2ZXbnd0ODNpMCIsIm1hYyI6ImU4NDhkYTM0MTBkMDQ3NDZkMjczOTU2Y2NhOWU1YTUyZDFhNDYxMmZiNTQ0MDg2YzE1NDZhNTRjZTA2MmVhMDcifQ=='
+                'x-xsrf-token': 'eyJpdiI6IjhSNk1mcFROdDJGemxMbTVReFFQQ2c9PSIsInZhbHVlIjoidkNHRUx0cDlqYTFBUEhaVHZPWEt6eXhrYWhrVmlvSjNON0lkZmFCUmREUjVqNzBaSGd6RkdoUHpONXVSMXN5S05wQmdMTXhzSkdxVHRINEFodllXdFFhNGlMcXJyc0RlTmp6cGQyYWVtNmZFbmlFTWFSNWl3TTBnNWxGZHgrMU8iLCJtYWMiOiIzY2E1MzQ5ZmMzMDJkZGI2MTBmOGRlZDAyYzE2YzRhODE1MjgwYTA1ZDhmMTdhMTI3YWU0MjdmNTM4NmRhNmVkIn0='
             },
         })
         const userId = data.result.id
+
+        console.log(data)
 
         const chunk = await axios.get('https://storiesig.info/api/ig/stories/' + userId, {
             headers: {
@@ -143,7 +145,7 @@ const InstagramStories = async (ctx) => {
                 'user-agent':
                     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36',
                 'x-token': null,
-                'x-xsrf-token': 'eyJpdiI6IkhjWnc0ZVwvR3J1UVBjREg1dEFQY2ZBPT0iLCJ2YWx1ZSI6InNrdlVvYkhEOWtZYWptaUIxZ0VrejlJNXY2OEJxWjJ3TWFnTTRMaGFWR1I4c2I2bVZEdTdGYTlhd0I1YUh3SVZldlhOU2FvTnZvVWFtOWRNaWtBalNYZnhcL01XZUxyWklvdzJhRzQ0ZHRmM3g5SmphY3hXT2dUa2ZXbnd0ODNpMCIsIm1hYyI6ImU4NDhkYTM0MTBkMDQ3NDZkMjczOTU2Y2NhOWU1YTUyZDFhNDYxMmZiNTQ0MDg2YzE1NDZhNTRjZTA2MmVhMDcifQ=='
+                'x-xsrf-token': 'eyJpdiI6IjhSNk1mcFROdDJGemxMbTVReFFQQ2c9PSIsInZhbHVlIjoidkNHRUx0cDlqYTFBUEhaVHZPWEt6eXhrYWhrVmlvSjNON0lkZmFCUmREUjVqNzBaSGd6RkdoUHpONXVSMXN5S05wQmdMTXhzSkdxVHRINEFodllXdFFhNGlMcXJyc0RlTmp6cGQyYWVtNmZFbmlFTWFSNWl3TTBnNWxGZHgrMU8iLCJtYWMiOiIzY2E1MzQ5ZmMzMDJkZGI2MTBmOGRlZDAyYzE2YzRhODE1MjgwYTA1ZDhmMTdhMTI3YWU0MjdmNTM4NmRhNmVkIn0='
             },
         })
 
