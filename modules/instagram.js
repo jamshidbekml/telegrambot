@@ -88,7 +88,6 @@ const InstagramVideo = async (ctx) => {
                 },
             }
         );
-        console.log(data);
         var videos = [];
         videos = videos.concat(data);
         videos.forEach((e) => {
@@ -133,12 +132,12 @@ const InstagramStories = async (ctx) => {
                 'user-agent':
                     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36',
                 'x-token': null,
-                'x-xsrf-token': 'eyJpdiI6IjhSNk1mcFROdDJGemxMbTVReFFQQ2c9PSIsInZhbHVlIjoidkNHRUx0cDlqYTFBUEhaVHZPWEt6eXhrYWhrVmlvSjNON0lkZmFCUmREUjVqNzBaSGd6RkdoUHpONXVSMXN5S05wQmdMTXhzSkdxVHRINEFodllXdFFhNGlMcXJyc0RlTmp6cGQyYWVtNmZFbmlFTWFSNWl3TTBnNWxGZHgrMU8iLCJtYWMiOiIzY2E1MzQ5ZmMzMDJkZGI2MTBmOGRlZDAyYzE2YzRhODE1MjgwYTA1ZDhmMTdhMTI3YWU0MjdmNTM4NmRhNmVkIn0='
+                'x-xsrf-token': process.env.XTOKEN
             },
         })
+        console.log(data);
         const userId = data.result.id
-
-        console.log(data)
+        console.log(userId);
 
         const chunk = await axios.get('https://storiesig.info/api/ig/stories/' + userId, {
             headers: {
@@ -146,7 +145,7 @@ const InstagramStories = async (ctx) => {
                 'user-agent':
                     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36',
                 'x-token': null,
-                'x-xsrf-token': process.env.X-TOKEN
+                'x-xsrf-token': process.env.XTOKEN
             },
         })
 
@@ -189,7 +188,7 @@ const InstagramStories = async (ctx) => {
             });
         });
     } catch (err) {
-        console.log(err);
+        console.log(err.message);
         ctx.reply(
             'This link is incorrectly entered or the user account is private',
             {
@@ -210,7 +209,7 @@ const ProfilePhoto = async (ctx) => {
                 'user-agent':
                     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36',
                 'x-token': null,
-                'x-xsrf-token': process.env.X_TOKEN
+                'x-xsrf-token': process.env.XTOKEN
             },
         })
         ctx.replyWithChatAction('upload_photo');

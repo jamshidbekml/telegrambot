@@ -8,7 +8,7 @@ const {
 } = require('./lib/commands');
 const { sequelize, BotSubscribers } = require('./model/model');
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
+const bot = new Telegraf(process.env.BOT-TOKEN);
 
 sequelize
     .sync({ force: false })
