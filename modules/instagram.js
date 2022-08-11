@@ -4,80 +4,8 @@ const axios = require('axios').default;
 const InstagramVideo = async (ctx) => {
     try {
         ctx.reply('⏳');
-        // const { data } = await axios.get(
-        //     'https://instadownloader.co/instagram_post_data.php?url=' +
-        //         ctx.message.text,
-        //     {
-        //         headers: {
-        //             'User-Agent':
-        //                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36',
-        //         },
-        //     }
-        // );
-        // var newData = JSON.parse(data);
-        // console.log(newData);
-        // if (
-        //     newData.videos_links.length == 0 &&
-        //     newData.images_links.length == 0
-        // ) {
-        //     const newLinkArr = ctx.message.text.split('/');
-        //     const newLink = `https://www.instagram.com/${newLinkArr[3]}/${newLinkArr[4]}`;
-        //     const { data } = await axios.get(
-        //         'https://instadownloader.co/instagram_post_data.php?url=' +
-        //             newLink,
-        //         {
-        //             headers: {
-        //                 'User-Agent':
-        //                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36',
-        //             },
-        //         }
-        //     );
-        //     newData = JSON.parse(data);
-        // }
-        // if (newData.images_links) {
-        //     const ImagesLinks = newData.images_links;
-        //     ImagesLinks.forEach((e) => {
-        //         ctx.replyWithChatAction('upload_photo');
-        //         ctx.telegram
-        //             .sendMediaGroup(ctx.message.chat.id, [
-        //                 {
-        //                     type: 'photo',
-        //                     media: e.url,
-        //                     caption: `@smvideosdl_bot`,
-        //                 },
-        //             ])
-        //             .then((res) => {
-        //                 ctx.telegram.forwardMessage(
-        //                     '@downloadedVideos',
-        //                     res[0].chat.id,
-        //                     res[0].message_id
-        //                 );
-        //             });
-        //     });
-        // }
-        // if (newData.videos_links) {
-        //     const VideoLinks = newData.videos_links;
-        //     VideoLinks.forEach(async (e) => {
-        //         ctx.replyWithChatAction('upload_video');
-        //         ctx.replyWithVideo(
-        //             {
-        //                 url: e.url,
-        //             },
-        //             {
-        //                 caption: `@smvideosdl_bot`,
-        //             }
-        //         ).then((res) => {
-        //             ctx.telegram.forwardMessage(
-        //                 '@downloadedVideos',
-        //                 res.chat.id,
-        //                 res.message_id
-        //             );
-        //         });
-        //     });
-        // }
-
-        const { data } = await axios.post(
-            'https://media.storiesig.info/api/convert',
+        const {data} = await axios.post(
+            'https://reelit.io/api/fetch',
             {
                 url: ctx.message.text,
             },
@@ -85,30 +13,55 @@ const InstagramVideo = async (ctx) => {
                 headers: {
                     'User-Agent':
                         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36',
+                        'X-Requested-With': 'XMLHttpRequest'
                 },
             }
         );
-        var videos = [];
-        videos = videos.concat(data);
-        videos.forEach((e) => {
-            const type = e.url[0].type == 'mp4' ? 'video' : 'photo';
-            const url = e.url[0].url;
-            ctx.replyWithChatAction(`upload_${type}`);
-            ctx.telegram
-                .sendMediaGroup(ctx.message.chat.id, [
-                    {
-                        type: type,
-                        media: url,
-                        caption: `@smvideosdl_bot`,
-                    },
-                ])
-                .then((res) => {
-                    ctx.telegram.forwardMessage(
-                        '@downloadedVideos',
-                        res[0].chat.id,
-                        res[0].message_id
-                    );
-                });
+
+        const links = data.media.data.mediaList
+        links.forEach((e) => {
+            var videos = e.videos ? e.videos : []
+            var images = e.images ? e.images : []
+            var username = e.user ? e.user.username : `Instagramdan ko'rish`
+            if(videos.length){
+                ctx.replyWithChatAction(`upload_video`);
+                ctx.telegram
+                    .sendMediaGroup(ctx.message.chat.id, [
+                        {
+                            type: 'video',
+                            media: videos[0].url,
+                            parse_mode: 'HTML',
+                            caption: `
+                            @smvideosdl_bot\n\n<i><a href="${ctx.message.text}">${username}</a></i>
+                            `,
+                        },
+                    ])
+                    .then((res) => {
+                        ctx.telegram.forwardMessage(
+                            '@downloadedVideos',
+                            res[0].chat.id,
+                            res[0].message_id
+                        );
+                    });
+            } else if(!videos.length && images) {
+                console.log(e);
+                ctx.replyWithChatAction(`upload_photo`);
+                ctx.telegram
+                    .sendMediaGroup(ctx.message.chat.id, [
+                        {
+                            type: 'photo',
+                            media: e.images[2].url,
+                            caption: `@smvideosdl_bot`,
+                        },
+                    ])
+                    .then((res) => {
+                        ctx.telegram.forwardMessage(
+                            '@downloadedVideos',
+                            res[0].chat.id,
+                            res[0].message_id
+                        );
+                    });
+            }
         });
     } catch (err) {
         ctx.reply(
@@ -120,73 +73,71 @@ const InstagramVideo = async (ctx) => {
         console.log(err.message);
     }
 };
-// https://instadownloader.co/instagram_post_data.php?path=%2Finstagram-story-download.php&url=https%3A%2F%2Fwww.instagram.com%2Fstories%2Fahadbekmunirov%2F2883040101828138435%2F
 
 const InstagramStories = async (ctx) => {
     try {
         ctx.reply('⏳');
-        const username = ctx.message.text.split('/')[4]
-        const { data } = await axios.get('https://storiesig.info/api/ig/profile/' + username, {
-            headers: {
-                'referer': 'https://storiesig.info/en/instagram-story-downloader/',
-                'user-agent':
-                    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36',
-                'x-token': null,
-                'x-xsrf-token': process.env.XTOKEN
+        const {data} = await axios.post(
+            'https://reelit.io/api/fetch',
+            {
+                url: ctx.message.text,
+                type: 'story',
+                username: ctx.message.text.split('/')[5]
             },
-        })
-        console.log(data);
-        const userId = data.result.id
-        console.log(userId);
-
-        const chunk = await axios.get('https://storiesig.info/api/ig/stories/' + userId, {
-            headers: {
-                'referer': 'https://storiesig.info/en/instagram-story-downloader/',
-                'user-agent':
-                    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36',
-                'x-token': null,
-                'x-xsrf-token': process.env.XTOKEN
-            },
-        })
-
-        const stories = chunk.data.result
-
-        stories.filter(e => !e.video_versions).forEach((e) => {
-            console.log(e.image_versions2.candidates[0].url);
-            ctx.replyWithChatAction('upload_photo');
-            ctx.telegram
-                .sendMediaGroup(ctx.message.chat.id, [
-                    {
-                        type: 'photo',
-                        media: e.image_versions2.candidates[0].url,
-                        caption: `@smvideosdl_bot`,
-                    },
-                ])
-                .then((res) => {
-                    ctx.telegram.forwardMessage(
-                        '@downloadedVideos',
-                        res[0].chat.id,
-                        res[0].message_id
-                    );
-                });
-        });
-        stories.filter(e => e.video_versions).forEach(async (e) => {
-            ctx.replyWithChatAction('upload_video');
-            ctx.replyWithVideo(
-                {
-                    url: e.video_versions[0].url,
+            {
+                headers: {
+                    'User-Agent':
+                        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36',
+                        'X-Requested-With': 'XMLHttpRequest'
                 },
-                {
-                    caption: `@smvideosdl_bot`,
-                }
-            ).then((res) => {
-                ctx.telegram.forwardMessage(
-                    '@downloadedVideos',
-                    res.chat.id,
-                    res.message_id
-                );
-            });
-        });
+            }
+        );
+
+        data.media.data.stories.forEach(e => {
+            var videos = e.videos ? e.videos : []
+            var images = e.images ? e.images : []
+            var username = data.media.data.user ? data.media.data.user.username : `Instagramdan ko'rish`
+            if(videos.length){
+                ctx.replyWithChatAction(`upload_video`);
+                ctx.telegram
+                    .sendMediaGroup(ctx.message.chat.id, [
+                        {
+                            type: 'video',
+                            media: videos[0].url,
+                            parse_mode: 'HTML',
+                            caption: `
+                            @smvideosdl_bot\n\n<i><a href="${ctx.message.text}">${username}</a></i>
+                            `,
+                        },
+                    ])
+                    .then((res) => {
+                        ctx.telegram.forwardMessage(
+                            '@downloadedVideos',
+                            res[0].chat.id,
+                            res[0].message_id
+                        );
+                    });
+            } else if(!videos.length && images) {
+                console.log(e);
+                ctx.replyWithChatAction(`upload_photo`);
+                ctx.telegram
+                    .sendMediaGroup(ctx.message.chat.id, [
+                        {
+                            type: 'photo',
+                            media: e.images[2].url,
+                            caption: `@smvideosdl_bot`,
+                        },
+                    ])
+                    .then((res) => {
+                        ctx.telegram.forwardMessage(
+                            '@downloadedVideos',
+                            res[0].chat.id,
+                            res[0].message_id
+                        );
+                    });
+            }
+        })
+        
     } catch (err) {
         console.log(err.message);
         ctx.reply(
@@ -199,7 +150,6 @@ const InstagramStories = async (ctx) => {
 };
 
 const ProfilePhoto = async (ctx) => {
-    // https://storiesig.info/api/ig/stories/34377870670
     try {
         ctx.reply('⏳');
         const username = ctx.message.text.slice(1)
