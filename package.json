@@ -14,6 +14,7 @@
     "dependencies": {
         "axios": "^0.27.2",
         "dotenv": "^16.0.1",
+        "instagram-profile-picture": "^1.0.5",
         "pg": "^8.7.3",
         "pg-hstore": "^2.3.4",
         "sequelize": "^6.20.1",
