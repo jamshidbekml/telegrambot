@@ -13,7 +13,6 @@ const InstagramVideo = async (ctx) => {
                 'User-Agent':
                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36',
                     'X-Requested-With': 'XMLHttpRequest',
-                url: ctx.message.text
             }
         })
 
@@ -109,40 +108,4 @@ const InstagramStories = async (ctx) => {
         );
     }
 };
-
-const ProfilePhoto = async (ctx) => {
-    try {
-        ctx.reply('Try again later');
-        // const username = ctx.message.text.slice(1)
-        // ipp(username).then(user => {
-        //     console.log(user);
-        // })
-        // const { data } = await axios.post('https://givefastlink.com/instagram-downloader/api/instagram',{
-        //     url: username,
-        // }, {
-        //     headers: {
-        //         'user-agent':
-        //             'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36',
-        //     },
-        // })
-        // ctx.replyWithChatAction('upload_photo');
-        // ctx.telegram
-        //     .sendMediaGroup(ctx.message.chat.id, [
-        //         {
-        //             type: 'photo',
-        //             media: data.result.profile_pic_url,
-        //             caption: `@smvideosdl_bot`,
-        //         },
-        //     ])
-        //     .then((res) => {
-        //         ctx.telegram.forwardMessage(
-        //             '@downloadedVideos',
-        //             res[0].chat.id,
-        //             res[0].message_id
-        //         );
-        //     });
-    } catch (err) {
-        console.log(err.message);
-    }
-};
-module.exports = { InstagramVideo, InstagramStories, ProfilePhoto };
+module.exports = { InstagramVideo, InstagramStories };
